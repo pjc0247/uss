@@ -7,12 +7,23 @@ using UnityEngine.UI;
 public class UssTextModifier
 {
     [UssModifierKey("font-size")]
-    public void Apply(Graphic g, UssValue value)
+    public void ApplyFontSize(Text g, UssValue value)
     {
-        var colorValue = value as UssColorValue;
-        if (colorValue == null)
-            throw new UssModifierException("UssColorModifier", value, typeof(UssColorValue));
+        g.fontSize = (int)value.AsFloat();
+    }
 
-        g.color = colorValue.value;
+    [UssModifierKey("text-align")]
+    public void ApplyTextAlign(Text g, UssValue value)
+    {
+        var align = value.AsString();
+
+        if (align == "left")
+            g.alignment = TextAnchor.MiddleLeft;
+        else if (align == "center")
+            g.alignment = TextAnchor.MiddleLeft;
+        else if (align == "right")
+            g.alignment = TextAnchor.MiddleLeft;
+        else
+            throw new ArgumentException("Invalid param: " + align);
     }
 }

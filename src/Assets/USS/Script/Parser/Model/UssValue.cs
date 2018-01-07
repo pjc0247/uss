@@ -31,6 +31,25 @@ public class UssValueBase<T> : UssValue
 {
     public T value;
 }
+public static class UssValueExt
+{
+    public static string AsString(this UssValue v)
+    {
+        if (v.GetType() == typeof(UssStringValue))
+            return ((UssStringValue)(object)v).value;
+
+        throw new InvalidOperationException("Value cannot be string: " + v.GetType());
+    }
+    public static float AsFloat(this UssValue v)
+    {
+        if (v.GetType() == typeof(UssFloatValue))
+            return ((UssFloatValue)(object)v).value;
+        if (v.GetType() == typeof(UssIntValue))
+            return ((UssIntValue)(object)v).value;
+
+        throw new InvalidOperationException("Value cannot be float: " + v.GetType());
+    }
+}
 public class UssStringValue : UssValueBase<string>
 {
 }

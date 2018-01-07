@@ -1,3 +1,4 @@
 Text {
 	color: #FF0000FF;
+	font-size: 20;
 } 

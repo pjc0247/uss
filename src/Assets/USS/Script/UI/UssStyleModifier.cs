@@ -24,6 +24,7 @@ public class UssStyleModifier : MonoBehaviour
 
         // Load default modifiers
         LoadModifier<UssColorModifier>();
+        LoadModifier<UssTextModifier>();
     }
     public static void LoadModifier<T>()
         where T : new()
