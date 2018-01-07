@@ -2,8 +2,10 @@ Text {
 	color: #FF0000FF;
 	font-size: 20;
 	text-align: left middle;
+
+	outline: 0.1 #FF0000FF;
 } 
 
 Text #Text {
-    color: #FFFF00FF;
-}
+    color: #AFFF00FF;
+} 

@@ -19,6 +19,8 @@ public class UssStyleModifier : MonoBehaviour
     private static List<UssStyleDefinition> styles;
     private static Dictionary<string, ModifierData> modifiers;
 
+    private static DateTime applyTime;
+
     static UssStyleModifier()
     {
         modifiers = new Dictionary<string, ModifierData>();
@@ -26,6 +28,7 @@ public class UssStyleModifier : MonoBehaviour
         // Load default modifiers
         LoadModifier<UssColorModifier>();
         LoadModifier<UssTextModifier>();
+        LoadModifier<UssOutlineModifier>();
     }
     public static void LoadModifier<T>()
         where T : new()
@@ -56,6 +59,8 @@ public class UssStyleModifier : MonoBehaviour
     public static void LoadUss(string uss)
     {
         styles = new List<UssStyleDefinition>(UssParser.Parse(uss));
+
+        applyTime = DateTime.Now;
         Apply(GameObject.Find("Canvas"));
     }
 
@@ -135,6 +140,10 @@ public class UssStyleModifier : MonoBehaviour
         if (insp == null)
             insp = g.AddComponent<UssInspector>();
 
+        if (insp.updatedAt != applyTime)
+            insp.Clear();
+
         insp.applied.Add(style);
+        insp.updatedAt = applyTime;
     }
 }
