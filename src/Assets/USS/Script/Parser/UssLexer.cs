@@ -102,6 +102,18 @@ public class UssLexer
                 type = UssTokenType.HexColor
             };
         }
+        // VALUE REF
+        else if (str[0] == '@')
+        {
+            if (UssValidator.IsValidValueRef(str) == false)
+                throw new UssInvalidTokenException(str);
+
+            return new UssToken()
+            {
+                body = str,
+                type = UssTokenType.ValueRef
+            };
+        }
         // INT
         else if (int.TryParse(str, out trashInt))
         {

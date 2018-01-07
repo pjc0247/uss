@@ -53,4 +53,22 @@ public class UssValidator
 
         return true;
     }
+    public static bool IsValidValueRef(string str)
+    {
+        if (str[0] != '@')
+            return false;
+
+        for (int i = 1; i < str.Length; i++)
+        {
+            var c = str[i];
+
+            if (c == '_' ||
+                char.IsLetterOrDigit(c))
+                ; // PASS
+            else
+                return false;
+        }
+
+        return true;
+    }
 }

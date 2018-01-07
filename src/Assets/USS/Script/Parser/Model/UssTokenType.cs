@@ -13,6 +13,7 @@ public enum UssTokenType
     Comma,
 
     Id,
+    ValueRef,
     Null,
 
     Int, Float, HexColor
