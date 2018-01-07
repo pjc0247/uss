@@ -5,5 +5,5 @@ using UnityEngine;
 public class UssStyleProperty
 {
     public string key;
-    public object[] values;
+    public UssValue[] values;
 }

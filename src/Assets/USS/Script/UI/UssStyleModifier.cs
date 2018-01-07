@@ -81,10 +81,18 @@ public class UssStyleModifier : MonoBehaviour
                     var comp = g.GetComponent(m.Value.acceptedComponent);
                     if (comp == null) continue;
 
-                    object param = m.Value.isArrayParameter ? p.values : p.values[0];
-                    m.Value.method.Invoke(m.Value.modifier, new object[]{
-                        comp, param
-                    });
+                    if (m.Value.isArrayParameter)
+                    {
+                        m.Value.method.Invoke(m.Value.modifier, new object[]{
+                            comp, p.values
+                        });
+                    }
+                    else
+                    {
+                        m.Value.method.Invoke(m.Value.modifier, new object[]{
+                            comp, p.values[0]
+                        });
+                    }
                 }
             }
         }
