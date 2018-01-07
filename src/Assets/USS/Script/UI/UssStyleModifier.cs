@@ -13,6 +13,7 @@ public class UssStyleModifier : MonoBehaviour
         public object modifier;
         public MethodInfo method;
         public Type acceptedComponent;
+        public bool isArrayParameter;
     }
 
     private static List<UssStyleDefinition> styles;
@@ -45,7 +46,8 @@ public class UssStyleModifier : MonoBehaviour
             {
                 modifier = obj,
                 method = method,
-                acceptedComponent = method.GetParameters().First().ParameterType
+                acceptedComponent = method.GetParameters().First().ParameterType,
+                isArrayParameter = method.GetParameters().Last().ParameterType.IsArray
             });
         }
     }
@@ -79,8 +81,9 @@ public class UssStyleModifier : MonoBehaviour
                     var comp = g.GetComponent(m.Value.acceptedComponent);
                     if (comp == null) continue;
 
+                    object param = m.Value.isArrayParameter ? p.values : p.values[0];
                     m.Value.method.Invoke(m.Value.modifier, new object[]{
-                        comp, p.value
+                        comp, param
                     });
                 }
             }

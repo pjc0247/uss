@@ -23,6 +23,7 @@ public class UssParser
     private UssStyleDefinition current;
     private List<UssStyleCondition> conditions;
     private List<UssStyleProperty> properties;
+    private List<object> propertyValues;
 
     private int cur = 0;
     private string propertyKey;
@@ -132,6 +133,8 @@ public class UssParser
         {
             if (token.type == UssTokenType.Id)
             {
+                propertyValues = new List<object>();
+
                 propertyKey = token.body;
                 propertyState = PropertyParsingState.Colon;
             }
@@ -149,19 +152,20 @@ public class UssParser
         {
             if (token.IsValue)
             {
+                propertyValues.Add(UssValue.Create(token));
+            }
+            else if (token.type == UssTokenType.SemiColon)
+            {
                 properties.Add(new UssStyleProperty()
                 {
                     key = propertyKey,
-                    value = UssValue.Create(token)
+                    values = propertyValues.ToArray()
                 });
+
+                propertyState = PropertyParsingState.Key;
             }
             else
                 throw new InvalidOperationException("Invalid token `" + token.body + "`. (expected Value)");
-
-            if (GetNextToken().type == UssTokenType.SemiColon)
-                WasteNextToken();
-
-            propertyState = PropertyParsingState.Key;
         }
 
         return false;
