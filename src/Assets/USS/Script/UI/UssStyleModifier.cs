@@ -55,12 +55,7 @@ public class UssStyleModifier : MonoBehaviour
     }
     public static void LoadUss(string uss)
     {
-        Debug.Log("LoadUSS: " + uss);
-
         styles = new List<UssStyleDefinition>(UssParser.Parse(uss));
-
-        Debug.Log("Loaded " + styles.Count + " style(s).");
-
         Apply(GameObject.Find("Canvas"));
     }
 
