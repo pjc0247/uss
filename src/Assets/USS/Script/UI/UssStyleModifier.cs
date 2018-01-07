@@ -41,6 +41,8 @@ public class UssStyleModifier : MonoBehaviour
             var key = ((UssModifierKeyAttribute)attrs[0]).key;
             if (modifiers.ContainsKey(key))
                 throw new InvalidOperationException("Already has modifier with key: " + key);
+            if (method.GetParameters().Length != 2)
+                throw new InvalidOperationException("Invalid modifier format. Params.Length must be length of 2.");
 
             modifiers.Add(key, new ModifierData()
             {
@@ -64,6 +66,8 @@ public class UssStyleModifier : MonoBehaviour
 
     public static void Apply(GameObject g)
     {
+        if (g == null)
+            ;
         if (styles == null)
             throw new InvalidOperationException(".uss file not loaded yet.");
 
