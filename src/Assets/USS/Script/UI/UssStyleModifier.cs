@@ -76,6 +76,8 @@ public class UssStyleModifier : MonoBehaviour
             if (CheckConditions(g, style.conditions) == false)
                 continue;
 
+            AddInspectorItem(g, style);
+
             foreach (var p in style.properties)
             {
                 foreach (var m in modifiers)
@@ -130,5 +132,14 @@ public class UssStyleModifier : MonoBehaviour
         }
 
         return true;
+    }
+
+    private static void AddInspectorItem(GameObject g, UssStyleDefinition style)
+    {
+        var insp = g.GetComponent<UssInspector>();
+        if (insp == null)
+            insp = g.AddComponent<UssInspector>();
+
+        insp.applied.Add(style);
     }
 }

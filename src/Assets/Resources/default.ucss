@@ -3,3 +3,7 @@ Text {
 	font-size: 20;
 	text-align: left middle;
 } 
+
+Text #Text {
+    color: #FFFF00FF;
+}

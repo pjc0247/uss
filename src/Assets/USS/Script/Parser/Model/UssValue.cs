@@ -5,23 +5,25 @@ using UnityEngine;
 
 public class UssValue
 {
+    public string body;
+
     public static object Create(UssToken token)
     {
         if (token.IsValue == false)
             throw new ArgumentException("token is not a value");
 
         if (token.type == UssTokenType.Null)
-            return new UssNullValue();
+            return new UssNullValue() { body = token.body };
         if (token.type == UssTokenType.Int)
-            return new UssIntValue() { value = int.Parse(token.body) };
+            return new UssIntValue() { body = token.body, value = int.Parse(token.body) };
         if (token.type == UssTokenType.Float)
-            return new UssFloatValue() { value = float.Parse(token.body) };
+            return new UssFloatValue() { body = token.body, value = float.Parse(token.body) };
         if (token.type == UssTokenType.Id)
-            return new UssStringValue() { value = token.body };
+            return new UssStringValue() { body = token.body, value = token.body };
         if (token.type == UssTokenType.HexColor) {
             Color color;
             if (ColorUtility.TryParseHtmlString(token.body, out color))
-                return new UssColorValue() { value = color };
+                return new UssColorValue() { body = token.body, value = color };
             else
                 throw new UssParsingException("Invalid color format: " + token.body);
         }
