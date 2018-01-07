@@ -25,6 +25,7 @@ public class UssToken
         get
         {
             return type == UssTokenType.Null ||
+                type == UssTokenType.ValueRef ||
                 type == UssTokenType.Int || type == UssTokenType.Float ||
                 type == UssTokenType.HexColor ||
                 type == UssTokenType.Id;

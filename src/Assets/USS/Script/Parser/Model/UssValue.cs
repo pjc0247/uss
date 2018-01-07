@@ -10,6 +10,8 @@ public class UssValue
         if (token.IsValue == false)
             throw new ArgumentException("token is not a value");
 
+        if (token.type == UssTokenType.Null)
+            return new UssNullValue();
         if (token.type == UssTokenType.Int)
             return new UssIntValue() { value = int.Parse(token.body) };
         if (token.type == UssTokenType.Float)
@@ -37,6 +39,8 @@ public static class UssValueExt
     {
         if (v.GetType() == typeof(UssStringValue))
             return ((UssStringValue)(object)v).value;
+        if (v.GetType() == typeof(UssNullValue))
+            return null;
 
         throw new InvalidOperationException("Value cannot be string: " + v.GetType());
     }
@@ -49,6 +53,9 @@ public static class UssValueExt
 
         throw new InvalidOperationException("Value cannot be float: " + v.GetType());
     }
+}
+public class UssNullValue : UssValueBase<object>
+{
 }
 public class UssStringValue : UssValueBase<string>
 {
