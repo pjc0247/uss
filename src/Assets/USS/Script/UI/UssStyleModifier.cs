@@ -16,6 +16,8 @@ public class UssStyleModifier : MonoBehaviour
         public bool isArrayParameter;
     }
 
+    public static bool hasError = false;
+
     private static List<UssStyleDefinition> styles;
     private static Dictionary<string, ModifierData> modifiers;
 
@@ -58,10 +60,20 @@ public class UssStyleModifier : MonoBehaviour
     }
     public static void LoadUss(string uss)
     {
-        styles = new List<UssStyleDefinition>(UssParser.Parse(uss));
+        try
+        {
+            styles = new List<UssStyleDefinition>(UssParser.Parse(uss));
 
-        applyTime = DateTime.Now;
-        Apply(GameObject.Find("Canvas"));
+            applyTime = DateTime.Now;
+            Apply(GameObject.Find("Canvas"));
+
+            hasError = false;
+        }
+        catch(Exception e)
+        {
+            hasError = true;
+            Debug.LogException(e);
+        }
     }
 
     public static void Apply(GameObject g)
