@@ -23,7 +23,7 @@ public class UssParser
     }
 
     private ParsingState state;
-    private ValueParsingState constantState;
+    private ValueParsingState valueState;
     private PropertyParsingState propertyState;
 
     private List<UssToken> tokens;
@@ -48,7 +48,7 @@ public class UssParser
     {
         state = ParsingState.Root;
         propertyState = PropertyParsingState.Key;
-        constantState = ValueParsingState.Key;
+        valueState = ValueParsingState.Key;
     }
     public UssParsingResult ParseAll(UssToken[] _tokens)
     {
@@ -63,17 +63,20 @@ public class UssParser
 
             if (state == ParsingState.Root)
             {
+                if (token.IsIgnoreable) continue;
+
                 if (token.type == UssTokenType.ValueRef)
                 {
+                    Debug.Log(token.body);
                     state = ParsingState.Values;
-                    constantState = ValueParsingState.Key;
+                    valueState = ValueParsingState.Key;
                 }
                 else
                     state = ParsingState.Conditions;
             }
 
             if (state == ParsingState.Values)
-                ParseConstants(token);
+                ParseValues(token);
             else if (state == ParsingState.Conditions)
                 ParseConditions(token);
             else if (state == ParsingState.Properties)
@@ -112,41 +115,42 @@ public class UssParser
         return tokens[cur + 1];
     }
 
-    private void ParseConstants(UssToken token)
+    private void ParseValues(UssToken token)
     {
         if (token.IsIgnoreable) return;
 
         if (token.type == UssTokenType.SemiColon)
         {
-            if (constantState != ValueParsingState.End)
+            if (valueState != ValueParsingState.End)
                 throw new UssUnexpectedTokenException(token);
 
             state = ParsingState.Root;
             return;
         }
 
-        if (constantState == ValueParsingState.Key)
+        if (valueState == ValueParsingState.Key)
         {
             if (token.type != UssTokenType.ValueRef)
                 throw new UssUnexpectedTokenException(token, UssTokenType.ValueRef);
 
             valueKey = token.body.Substring(1);
-            constantState = ValueParsingState.Colon;
+            valueState = ValueParsingState.Colon;
         }
-        else if (constantState == ValueParsingState.Colon)
+        else if (valueState == ValueParsingState.Colon)
         {
             if (token.type != UssTokenType.Colon)
                 throw new UssUnexpectedTokenException(token, UssTokenType.Colon);
 
-            constantState = ValueParsingState.Value;
+            valueState = ValueParsingState.Value;
         }
-        else if (constantState == ValueParsingState.Value)
+        else if (valueState == ValueParsingState.Value)
         {
             if (token.IsValue == false)
                 throw new UssUnexpectedTokenException(token);
 
+            Debug.Log("NEw Value " + valueKey);
             values.Add(valueKey, UssValue.Create(token));
-            constantState = ValueParsingState.End;
+            valueState = ValueParsingState.End;
         }
     }
     private void ParseConditions(UssToken token)
