@@ -18,7 +18,7 @@ public class UssWindow : EditorWindow
 
     void OnEnable()
     {
-        cssTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/USS/EditorResources/css.png");
+        cssTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/USS/Resources/css.png");
     }
 
     void OnGUI()
