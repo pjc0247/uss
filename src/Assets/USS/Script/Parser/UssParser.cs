@@ -36,6 +36,7 @@ public class UssParser
     private Dictionary<string, UssValue> values;
 
     private UssStyleDefinition current;
+    private List<string> bundles;
     private List<UssStyleCondition> conditions;
     private List<UssStyleProperty> properties;
     private List<UssValue> propertyValues;
@@ -114,11 +115,13 @@ public class UssParser
             {
                 current.conditions = conditions.ToArray();
                 current.properties = properties.ToArray();
+                current.bundles = bundles.ToArray();
                 styles.Add(current);
             }
         }
 
         current = new UssStyleDefinition();
+        bundles = new List<string>();
         conditions = new List<UssStyleCondition>();
         properties = new List<UssStyleProperty>();
     }
@@ -156,7 +159,7 @@ public class UssParser
         {
             if (token.type == UssTokenType.LeftBracket)
             {
-                state = ParsingState.Values;
+                state = ParsingState.Properties;
                 nodeType = CurrentNodeType.Style;
             }
             else if (token.type == UssTokenType.Colon) 
@@ -223,7 +226,16 @@ public class UssParser
 
         if (propertyState == PropertyParsingState.Key)
         {
-            if (token.type == UssTokenType.Id)
+            if (token.type == UssTokenType.ValueRef)
+            {
+                bundles.Add(token.body);
+
+                if (GetNextToken().type == UssTokenType.SemiColon)
+                    WasteNextToken();
+                else
+                    throw new UssUnexpectedTokenException(GetNextToken(), UssTokenType.SemiColon);
+            }
+            else if (token.type == UssTokenType.Id)
             {
                 propertyValues = new List<UssValue>();
 
