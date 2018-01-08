@@ -33,6 +33,8 @@ public class UssStyleModifier : MonoBehaviour
         LoadModifier<UssTextModifier>();
         LoadModifier<UssOutlineModifier>();
         LoadModifier<UssShadowModifier>();
+        LoadModifier<UssPaddingModifier>();
+        LoadModifier<UssOverflowModifier>();
     }
     public static void LoadModifier<T>()
         where T : new()

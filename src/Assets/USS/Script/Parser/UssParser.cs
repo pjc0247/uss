@@ -21,6 +21,11 @@ public class UssParser
     {
         Key, Colon, Value
     }
+    private enum CurrentNodeType
+    {
+        Bundle,
+        Style
+    }
 
     private ParsingState state;
     private ValueParsingState valueState;
@@ -38,6 +43,8 @@ public class UssParser
     private int cur = 0;
     private string valueKey;
     private string propertyKey;
+
+    private CurrentNodeType nodeType;
 
     public static UssParsingResult Parse(string src)
     {
@@ -97,9 +104,18 @@ public class UssParser
     {
         if (current != null)
         {
-            current.conditions = conditions.ToArray();
-            current.properties = properties.ToArray();
-            styles.Add(current);
+            if (nodeType == CurrentNodeType.Bundle)
+            {
+                values[valueKey] = new UssBundleValue() {
+                    value = properties.ToArray()
+                };
+            }
+            else
+            {
+                current.conditions = conditions.ToArray();
+                current.properties = properties.ToArray();
+                styles.Add(current);
+            }
         }
 
         current = new UssStyleDefinition();
@@ -138,10 +154,15 @@ public class UssParser
         }
         else if (valueState == ValueParsingState.Colon)
         {
-            if (token.type != UssTokenType.Colon)
-                throw new UssUnexpectedTokenException(token, UssTokenType.Colon);
-
-            valueState = ValueParsingState.Value;
+            if (token.type == UssTokenType.LeftBracket)
+            {
+                state = ParsingState.Values;
+                nodeType = CurrentNodeType.Style;
+            }
+            else if (token.type == UssTokenType.Colon) 
+                valueState = ValueParsingState.Value;
+            else
+                throw new UssUnexpectedTokenException(token);
         }
         else if (valueState == ValueParsingState.Value)
         {
@@ -159,6 +180,7 @@ public class UssParser
         if (token.type == UssTokenType.LeftBracket)
         {
             state = ParsingState.Properties;
+            nodeType = CurrentNodeType.Style;
             return;
         }
 

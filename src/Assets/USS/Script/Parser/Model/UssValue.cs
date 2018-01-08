@@ -115,3 +115,6 @@ public class UssFloatValue : UssValueBase<float>
 public class UssColorValue : UssValueBase<Color32>
 {
 }
+public class UssBundleValue : UssValueBase<UssStyleProperty[]>
+{
+}

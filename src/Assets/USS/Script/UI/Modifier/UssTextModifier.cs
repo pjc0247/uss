@@ -11,6 +11,23 @@ public class UssTextModifier
     {
         g.fontSize = value.AsInt();
     }
+    [UssModifierKey("font-style")]
+    public void ApplyFontStyle(Text g, UssValue value)
+    {
+        var style = value.AsString();
+
+        if (style == "normal")
+            g.fontStyle = FontStyle.Normal;
+        else if (style == "bold")
+            g.fontStyle = FontStyle.Bold;
+        else if (style == "italic")
+            g.fontStyle = FontStyle.Italic;
+    }
+
+    [UssModifierKey("font-family")]
+    public void ApplyFontFamilty(Text g, UssValue value)
+    {
+    }
 
     [UssModifierKey("text-align")]
     public void ApplyTextAlign(Text g, UssValue[] values)
