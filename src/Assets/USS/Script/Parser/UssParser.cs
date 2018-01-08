@@ -148,7 +148,6 @@ public class UssParser
             if (token.IsValue == false)
                 throw new UssUnexpectedTokenException(token);
 
-            Debug.Log("NEw Value " + valueKey);
             values.Add(valueKey, UssValue.Create(token));
             valueState = ValueParsingState.End;
         }
