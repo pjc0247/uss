@@ -7,8 +7,15 @@ public class UssParser
 {
     private enum ParsingState
     {
+        Root,
+
+        Values,
         Conditions,
         Properties
+    }
+    private enum ValueParsingState
+    {
+        Key, Colon, Value, End
     }
     private enum PropertyParsingState
     {
@@ -16,9 +23,12 @@ public class UssParser
     }
 
     private ParsingState state;
+    private ValueParsingState constantState;
     private PropertyParsingState propertyState;
 
     private List<UssToken> tokens;
+    private List<UssStyleDefinition> styles;
+    private Dictionary<string, UssValue> values;
 
     private UssStyleDefinition current;
     private List<UssStyleCondition> conditions;
@@ -26,51 +36,73 @@ public class UssParser
     private List<UssValue> propertyValues;
 
     private int cur = 0;
+    private string valueKey;
     private string propertyKey;
 
-    public static UssStyleDefinition[] Parse(string src)
+    public static UssParsingResult Parse(string src)
     {
         return new UssParser().ParseAll(UssLexer.Parse(src));
     }
 
     private UssParser()
     {
-        state = ParsingState.Conditions;
+        state = ParsingState.Root;
         propertyState = PropertyParsingState.Key;
+        constantState = ValueParsingState.Key;
     }
-
-    public UssStyleDefinition[] ParseAll(UssToken[] _tokens)
+    public UssParsingResult ParseAll(UssToken[] _tokens)
     {
         tokens = new List<UssToken>(_tokens);
-        var result = new List<UssStyleDefinition>();
+        styles = new List<UssStyleDefinition>();
+        values = new Dictionary<string, UssValue>();
 
-        current = new UssStyleDefinition();
-        conditions = new List<UssStyleCondition>();
-        properties = new List<UssStyleProperty>();
-
+        FlushCurrentDifinition();
         for (cur = 0; cur < tokens.Count; cur++)
         {
             var token = tokens[cur];
 
-            if (state == ParsingState.Conditions)
+            if (state == ParsingState.Root)
+            {
+                if (token.type == UssTokenType.ValueRef)
+                {
+                    state = ParsingState.Values;
+                    constantState = ValueParsingState.Key;
+                }
+                else
+                    state = ParsingState.Conditions;
+            }
+
+            if (state == ParsingState.Values)
+                ParseConstants(token);
+            else if (state == ParsingState.Conditions)
                 ParseConditions(token);
             else if (state == ParsingState.Properties)
             {
                 if (ParseProperties(token))
-                {
-                    current.conditions = conditions.ToArray();
-                    current.properties = properties.ToArray();
-                    result.Add(current);
-                    current = new UssStyleDefinition();
-                    conditions = new List<UssStyleCondition>();
-                    properties = new List<UssStyleProperty>();
-                }
+                    FlushCurrentDifinition();
             }
         }
 
-        return result.ToArray();
+        return new UssParsingResult()
+        {
+            styles = styles.ToArray(),
+            values = values
+        };
     }
 
+    private void FlushCurrentDifinition()
+    {
+        if (current != null)
+        {
+            current.conditions = conditions.ToArray();
+            current.properties = properties.ToArray();
+            styles.Add(current);
+        }
+
+        current = new UssStyleDefinition();
+        conditions = new List<UssStyleCondition>();
+        properties = new List<UssStyleProperty>();
+    }
     private void WasteNextToken()
     {
         cur++;
@@ -80,6 +112,43 @@ public class UssParser
         return tokens[cur + 1];
     }
 
+    private void ParseConstants(UssToken token)
+    {
+        if (token.IsIgnoreable) return;
+
+        if (token.type == UssTokenType.SemiColon)
+        {
+            if (constantState != ValueParsingState.End)
+                throw new UssUnexpectedTokenException(token);
+
+            state = ParsingState.Root;
+            return;
+        }
+
+        if (constantState == ValueParsingState.Key)
+        {
+            if (token.type != UssTokenType.ValueRef)
+                throw new UssUnexpectedTokenException(token, UssTokenType.ValueRef);
+
+            valueKey = token.body.Substring(1);
+            constantState = ValueParsingState.Colon;
+        }
+        else if (constantState == ValueParsingState.Colon)
+        {
+            if (token.type != UssTokenType.Colon)
+                throw new UssUnexpectedTokenException(token, UssTokenType.Colon);
+
+            constantState = ValueParsingState.Value;
+        }
+        else if (constantState == ValueParsingState.Value)
+        {
+            if (token.IsValue == false)
+                throw new UssUnexpectedTokenException(token);
+
+            values.Add(valueKey, UssValue.Create(token));
+            constantState = ValueParsingState.End;
+        }
+    }
     private void ParseConditions(UssToken token)
     {
         if (token.IsIgnoreable) return;
@@ -90,33 +159,31 @@ public class UssParser
             return;
         }
 
-        var condition = token.body;
+        // Every types of token can be accepted here
+        // since name of the Unity's gameobject can contain almost characters.
+        // (ex: Zu!ZU##!)
+        var rawCondition = token.body;
+        var styleCondition = new UssStyleCondition();
+
         // CLASS
-        if (condition[0] == '.')
+        if (rawCondition[0] == '.')
         {
-            conditions.Add(new UssStyleCondition()
-            {
-                target = UssStyleTarget.Class,
-                name = condition.Substring(1)
-            });
+            styleCondition.target = UssStyleTarget.Class;
+            styleCondition.name = rawCondition.Substring(1);
         }
         // NAME
-        else if (condition[0] == '#')
+        else if (rawCondition[0] == '#')
         {
-            conditions.Add(new UssStyleCondition()
-            {
-                target = UssStyleTarget.Name,
-                name = condition.Substring(1)
-            });
+            styleCondition.target = UssStyleTarget.Name;
+            styleCondition.name = rawCondition.Substring(1);
         }
         else
         {
-            conditions.Add(new UssStyleCondition()
-            {
-                target = UssStyleTarget.Component,
-                name = condition
-            });
+            styleCondition.target = UssStyleTarget.Component;
+            styleCondition.name = rawCondition;
         }
+
+        conditions.Add(styleCondition);
     }
     private bool ParseProperties(UssToken token)
     {
@@ -125,7 +192,7 @@ public class UssParser
         if (propertyState == PropertyParsingState.Key &&
             token.type == UssTokenType.RightBracket)
         {
-            state = ParsingState.Conditions;
+            state = ParsingState.Root;
             return true;
         }
 
@@ -152,7 +219,7 @@ public class UssParser
         {
             if (token.IsValue)
             {
-                propertyValues.Add((UssValue)UssValue.Create(token));
+                propertyValues.Add(UssValue.Create(token));
             }
             else if (token.type == UssTokenType.SemiColon)
             {

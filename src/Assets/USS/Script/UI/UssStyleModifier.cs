@@ -17,6 +17,7 @@ public class UssStyleModifier : MonoBehaviour
     }
 
     public static bool hasError = false;
+    public static bool applied = false;
 
     private static List<UssStyleDefinition> styles;
     private static Dictionary<string, ModifierData> modifiers;
@@ -31,6 +32,7 @@ public class UssStyleModifier : MonoBehaviour
         LoadModifier<UssColorModifier>();
         LoadModifier<UssTextModifier>();
         LoadModifier<UssOutlineModifier>();
+        LoadModifier<UssShadowModifier>();
     }
     public static void LoadModifier<T>()
         where T : new()
@@ -62,12 +64,22 @@ public class UssStyleModifier : MonoBehaviour
     {
         try
         {
-            styles = new List<UssStyleDefinition>(UssParser.Parse(uss));
+            UssValues.Reset();
+            var result = UssParser.Parse(uss);
+            styles = new List<UssStyleDefinition>(result.styles);
+            foreach (var pair in result.values)
+                UssValues.SetValue(pair.Key, pair.Value);
 
             applyTime = DateTime.Now;
             Apply(GameObject.Find("Canvas"));
 
             hasError = false;
+            applied = true;
+
+#if UNITY_EDITOR
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
+                UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());
+#endif
         }
         catch(Exception e)
         {
@@ -81,7 +93,7 @@ public class UssStyleModifier : MonoBehaviour
         if (g == null)
             ;
         if (styles == null)
-            throw new InvalidOperationException(".uss file not loaded yet.");
+            throw new InvalidOperationException(".ucss file not loaded yet.");
 
         foreach (var style in styles)
         {

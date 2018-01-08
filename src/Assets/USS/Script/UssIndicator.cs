@@ -1,9 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UssIndicator : MonoBehaviour
 {
+    private static bool showModified = false;
+    private static DateTime showModifiedSince;
+
     static public void drawString(string text, Color? colour = null)
     {
         UnityEditor.Handles.BeginGUI();
@@ -31,11 +35,30 @@ public class UssIndicator : MonoBehaviour
     }
     void OnDrawGizmos()
     {
-        if (UssStyleModifier.hasError == false)
-            return;
+        if (UssStyleModifier.applied)
+        {
+            UssStyleModifier.applied = false;
 
-        drawString("Your .ucss has parsing error(s).\r\n" +
-            "Please check console for details",
-            Color.red);
+            showModified = true;
+            showModifiedSince = DateTime.Now;
+        }
+
+        if (showModified) {
+            var delta = (DateTime.Now - showModifiedSince);
+            if (delta <= TimeSpan.FromSeconds(1.5f))
+            {
+                drawString("USS modified successfully", 
+                    new Color(1, 0, 0, 1.0f - (float)delta.TotalSeconds / 1.5f));
+            }
+            else
+                showModified = false;
+        }
+
+        if (UssStyleModifier.hasError)
+        {
+            drawString("Your .ucss has parsing error(s).\r\n" +
+                "Please check console for details",
+                Color.red);
+        }
     }
 }

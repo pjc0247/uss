@@ -24,6 +24,13 @@ public class UssLexerTest : MonoBehaviour
     }
 
     [Test]
+    public void ParseOne_ValueRef()
+    {
+        var parsed = UssLexer.ParseOne("@asdf");
+        Assert.AreEqual(UssTokenType.ValueRef, parsed.type);
+    }
+
+    [Test]
     public void ParseAll()
     {
         var tokens = UssLexer.Parse("corgi{color:#ABABAB;}");

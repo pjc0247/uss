@@ -7,12 +7,16 @@ using UnityEngine.UI;
 public class UssColorModifier
 {
     [UssModifierKey("color")]
-    public void Apply(Graphic g, UssValue value)
+    public void ApplyColor(Graphic g, UssValue value)
     {
-        var colorValue = value as UssColorValue;
-        if (colorValue == null)
-            throw new UssModifierException("UssColorModifier", value, typeof(UssColorValue));
+        var color = value.AsColor();
+        g.color = color;
+    }
 
-        g.color = colorValue.value;
+    [UssModifierKey("opacity")]
+    public void ApplyOpacity(Graphic g, UssValue value)
+    {
+        var alpha = value.AsFloat();
+        g.canvasRenderer.SetAlpha(alpha);
     }
 }

@@ -9,7 +9,7 @@ public class UssTextModifier
     [UssModifierKey("font-size")]
     public void ApplyFontSize(Text g, UssValue value)
     {
-        g.fontSize = (int)value.AsFloat();
+        g.fontSize = value.AsInt();
     }
 
     [UssModifierKey("text-align")]

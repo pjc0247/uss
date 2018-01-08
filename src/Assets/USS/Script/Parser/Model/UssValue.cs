@@ -7,7 +7,7 @@ public class UssValue
 {
     public string body;
 
-    public static object Create(UssToken token)
+    public static UssValue Create(UssToken token)
     {
         if (token.IsValue == false)
             throw new ArgumentException("token is not a value");
@@ -27,8 +27,17 @@ public class UssValue
             else
                 throw new UssParsingException("Invalid color format: " + token.body);
         }
+        if (token.type == UssTokenType.ValueRef)
+            return new UssRefValue() { body = token.body, key = token.body.Substring(1) };
 
         throw new InvalidOperationException("Unknown type: " + token.type);
+    }
+
+    public bool IsNone()
+    {
+        if (GetType() == typeof(UssStringValue))
+            return ((UssStringValue)this).value == "none";
+        return false;
     }
 }
 public class UssValueBase<T> : UssValue
@@ -37,8 +46,26 @@ public class UssValueBase<T> : UssValue
 }
 public static class UssValueExt
 {
+    public static UssValue Unwrap(this UssValue v)
+    {
+        if (v.GetType() == typeof(UssRefValue))
+            return UssValues.GetValue((UssRefValue)v);
+        return v;
+    }
+
+    public static Color AsColor(this UssValue v)
+    {
+        v = v.Unwrap();
+
+        if (v.GetType() == typeof(UssColorValue))
+            return ((UssColorValue)v).value;
+
+        throw new InvalidOperationException("Value cannot be color: " + v.GetType());
+    }
     public static string AsString(this UssValue v)
     {
+        v = v.Unwrap();
+
         if (v.GetType() == typeof(UssStringValue))
             return ((UssStringValue)(object)v).value;
         if (v.GetType() == typeof(UssNullValue))
@@ -48,6 +75,8 @@ public static class UssValueExt
     }
     public static float AsFloat(this UssValue v)
     {
+        v = v.Unwrap();
+
         if (v.GetType() == typeof(UssFloatValue))
             return ((UssFloatValue)(object)v).value;
         if (v.GetType() == typeof(UssIntValue))
@@ -55,6 +84,21 @@ public static class UssValueExt
 
         throw new InvalidOperationException("Value cannot be float: " + v.GetType());
     }
+    public static int AsInt(this UssValue v)
+    {
+        v = v.Unwrap();
+
+        if (v.GetType() == typeof(UssFloatValue))
+            return (int)((UssFloatValue)(object)v).value;
+        if (v.GetType() == typeof(UssIntValue))
+            return ((UssIntValue)(object)v).value;
+
+        throw new InvalidOperationException("Value cannot be integer: " + v.GetType());
+    }
+}
+public class UssRefValue : UssValueBase<string>
+{
+    public string key;
 }
 public class UssNullValue : UssValueBase<object>
 {
