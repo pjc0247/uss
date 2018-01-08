@@ -14,5 +14,6 @@ Text {
 
 Features
 ----
-* CSS style
-* Auto refresh
+* CSS oriented syntax
+* Zero overhead (editor-time execution)
+* Auto refreshing
