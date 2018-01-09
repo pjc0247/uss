@@ -30,7 +30,6 @@ public class UssLexer
         seperators["{"] = UssTokenType.LeftBracket;
         seperators["}"] = UssTokenType.RightBracket;
         seperators[","] = UssTokenType.Comma;
-        seperators[","] = UssTokenType.Comma;
         seperators["*"] = UssTokenType.Asterisk;
         seperators["null"] = UssTokenType.Null;
     }

@@ -31,6 +31,7 @@ public class UssAutoRefresh : AssetPostprocessor
             if (asset == currentUcss)
             {
                 UssStyleModifier.LoadUss(File.ReadAllText(asset));
+                
             }
         }
     }

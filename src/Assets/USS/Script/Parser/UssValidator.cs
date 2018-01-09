@@ -26,7 +26,7 @@ public class UssValidator
 
             if (i == 0 && (c == '.' || c == '#'))
                 ; // PASS
-            if (c == '_' || c == '-' ||
+            else if (c == '_' || c == '-' ||
                 char.IsLetterOrDigit(c))
                 ; // PASS
             else

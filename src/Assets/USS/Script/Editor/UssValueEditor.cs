@@ -55,8 +55,9 @@ public class UssValueEditor : EditorWindow
 
         if (GUI.changed)
         {
-            Debug.Log("Apply");
             UssStyleModifier.Apply(GameObject.Find("Canvas"));
+
+            EditorUtility.SetDirty(GameObject.Find("Canvas"));
         }
     }
 
