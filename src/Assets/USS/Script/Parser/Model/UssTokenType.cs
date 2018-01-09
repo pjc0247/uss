@@ -8,6 +8,8 @@ public enum UssTokenType
     Whitespace,
     CrLf,
 
+    Comment,
+
     LeftBracket, RightBracket,
     Colon, SemiColon,
     Comma,

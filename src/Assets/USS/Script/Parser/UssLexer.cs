@@ -31,6 +31,7 @@ public class UssLexer
         seperators["}"] = UssTokenType.RightBracket;
         seperators[","] = UssTokenType.Comma;
         seperators["*"] = UssTokenType.Asterisk;
+        seperators["//"] = UssTokenType.Comment;
         seperators["null"] = UssTokenType.Null;
     }
     public static UssToken[] Parse(string src)

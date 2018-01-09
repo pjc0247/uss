@@ -27,7 +27,7 @@ public class UssParser
         Style
     }
 
-    private ParsingState state;
+    private ParsingState state, prevState;
     private ValueParsingState valueState;
     private PropertyParsingState propertyState;
 
@@ -82,6 +82,13 @@ public class UssParser
                     state = ParsingState.Conditions;
             }
 
+            if (token.type == UssTokenType.Comment)
+            {
+                while (GetNextToken() != null && GetNextToken().type != UssTokenType.CrLf)
+                    WasteNextToken();
+                continue;
+            }
+
             if (state == ParsingState.Values)
                 ParseValues(token);
             else if (state == ParsingState.Conditions)
@@ -130,6 +137,8 @@ public class UssParser
     }
     private UssToken GetNextToken()
     {
+        if (cur + 1 == tokens.Count)
+            return null;
         return tokens[cur + 1];
     }
 
