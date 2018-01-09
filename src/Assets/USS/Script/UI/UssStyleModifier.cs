@@ -16,6 +16,7 @@ public class UssStyleModifier : MonoBehaviour
         public bool isArrayParameter;
     }
 
+    public static bool loaded = false;
     public static bool hasError = false;
     public static bool applied = false;
 
@@ -64,6 +65,8 @@ public class UssStyleModifier : MonoBehaviour
     }
     public static void LoadUss(string uss)
     {
+        loaded = true;
+
         try
         {
             UssValues.Reset();
@@ -71,8 +74,7 @@ public class UssStyleModifier : MonoBehaviour
             styles = new List<UssStyleDefinition>(result.styles);
             foreach (var pair in result.values)
                 UssValues.SetValue(pair.Key, pair.Value);
-
-            applyTime = DateTime.Now;
+            
             Apply(GameObject.Find("Canvas"));
 
             hasError = false;
@@ -90,12 +92,15 @@ public class UssStyleModifier : MonoBehaviour
         }
     }
 
+
     public static void Apply(GameObject g)
     {
         if (g == null)
-            ;
+            Debug.LogWarning("Apply: gameObject is null");
         if (styles == null)
             throw new InvalidOperationException(".ucss file not loaded yet.");
+
+        applyTime = DateTime.Now;
 
         foreach (var style in styles)
         {
@@ -104,7 +109,17 @@ public class UssStyleModifier : MonoBehaviour
 
             AddInspectorItem(g, style);
 
-            foreach (var p in style.properties)
+            var properties = new List<UssStyleProperty>(style.properties);
+            foreach (var bundle in style.bundles)
+            {
+                var bundleValue = UssValues.GetValue(bundle) as UssBundleValue;
+                if (bundleValue == null)
+                    throw new InvalidOperationException(bundle + " is not a bundle.");
+
+                properties.AddRange(bundleValue.value);
+            }
+
+            foreach (var p in properties)
             {
                 foreach (var m in modifiers)
                 {
@@ -132,32 +147,78 @@ public class UssStyleModifier : MonoBehaviour
         for (int i = 0; i < g.transform.childCount; i++)
             Apply(g.transform.GetChild(i).gameObject);
     }
-
-    private static bool CheckConditions(GameObject g, UssStyleCondition[] conditions)
+    public static UnityEngine.Object[] GetReferences(GameObject root, string key)
     {
-        foreach (var c in conditions)
+        var result = new List<UnityEngine.Object>();
+        var styleRefs = new List<UssStyleDefinition>();
+
+        foreach (var style in styles)
         {
-            if (c.target == UssStyleTarget.Name)
+            if (style.properties.SelectMany(x => x.values).Any(x => (x is UssRefValue) && ((UssRefValue)x).key == key))
+                styleRefs.Add(style);
+        }
+
+        GetReferencesInternal(root, styleRefs, result);
+
+        return result.ToArray();
+    }
+    private static void GetReferencesInternal(GameObject g, List<UssStyleDefinition> styleRefs, List<UnityEngine.Object> result)
+    {
+        foreach (var style in styleRefs)
+        {
+            if (CheckConditions(g, style.conditions))
             {
-                if (g.name != c.name)
-                    return false;
-            }
-            else if (c.target == UssStyleTarget.Component)
-            {
-                if (g.GetComponent(c.name) == null)
-                    return false;
-            }
-            else if (c.target == UssStyleTarget.Class)
-            {
-                var klass = g.GetComponent<UssClass>();
-                if (klass == null)
-                    return false;
-                if (klass.classes.Split(' ').Contains(c.name) == false)
-                    return false;
+                result.Add(g);
+                break;
             }
         }
 
+        for (int i = 0; i < g.transform.childCount; i++)
+            GetReferencesInternal(g.transform.GetChild(i).gameObject, styleRefs, result);
+    }
+
+    private static int CheckConditionsUpwards(GameObject g, UssStyleCondition[] conditions, int offset)
+    {
+        var target = conditions[conditions.Length - 1 - offset];
+
+        offset += CheckCondition(g, target) ? 1 : 0;
+
+        if (g.transform.parent == null)
+            return offset;
+        else
+            return CheckConditionsUpwards(g.transform.parent.gameObject, conditions, offset);
+    }
+    private static bool CheckCondition(GameObject g, UssStyleCondition c)
+    {
+        if (c.target == UssStyleTarget.Name)
+        {
+            if (g.name != c.name)
+                return false;
+        }
+        else if (c.target == UssStyleTarget.Component)
+        {
+            if (g.GetComponent(c.name) == null)
+                return false;
+        }
+        else if (c.target == UssStyleTarget.Class)
+        {
+            var klass = g.GetComponent<UssClass>();
+            if (klass == null)
+                return false;
+            if (klass.classes.Split(' ').Contains(c.name) == false)
+                return false;
+        }
+
         return true;
+    }
+    private static bool CheckConditions(GameObject g, UssStyleCondition[] conditions)
+    {
+        if (conditions.Length == 1)
+            return CheckCondition(g, conditions[0]);
+
+        var c = CheckConditionsUpwards(g, conditions, 1);
+
+        return CheckConditionsUpwards(g, conditions, 0) == conditions.Length; 
     }
 
     private static void AddInspectorItem(GameObject g, UssStyleDefinition style)

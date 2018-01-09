@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UssValues : MonoBehaviour
 {
-    private static Dictionary<string, UssValue> values;
+    public static Dictionary<string, UssValue> values { get; private set; }
 
     static UssValues()
     {
