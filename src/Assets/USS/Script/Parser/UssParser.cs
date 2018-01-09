@@ -27,7 +27,7 @@ public class UssParser
         Style
     }
 
-    private ParsingState state, prevState;
+    private ParsingState state;
     private ValueParsingState valueState;
     private PropertyParsingState propertyState;
 

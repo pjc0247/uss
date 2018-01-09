@@ -75,7 +75,7 @@ public class UssStyleModifier : MonoBehaviour
             foreach (var pair in result.values)
                 UssValues.SetValue(pair.Key, pair.Value);
             
-            Apply(GameObject.Find("Canvas"));
+            Apply(UssRoot.FindRootInScene());
 
             hasError = false;
             applied = true;
