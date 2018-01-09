@@ -13,6 +13,14 @@ public class UssAutoRefresh : AssetPostprocessor
         set { EditorPrefs.SetString("_ucss_current_ucss", value); }
     }
 
+    public static void EnsureLastUcssLoaded()
+    {
+        if (UssStyleModifier.loaded) return;
+
+        if (string.IsNullOrEmpty(currentUcss) == false)
+            UssStyleModifier.LoadUss(File.ReadAllText(currentUcss));
+    }
+
     static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
     {
         foreach (var asset in importedAssets)
