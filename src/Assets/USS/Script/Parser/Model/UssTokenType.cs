@@ -12,6 +12,8 @@ public enum UssTokenType
     Colon, SemiColon,
     Comma,
 
+    Asterisk,
+
     Id,
     ValueRef,
     Null,

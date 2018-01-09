@@ -192,8 +192,13 @@ public class UssParser
         var rawCondition = token.body;
         var styleCondition = new UssStyleCondition();
 
+        if (rawCondition[0] == '*')
+        {
+            styleCondition.target = UssStyleTarget.All;
+            styleCondition.name = "*";
+        }
         // CLASS
-        if (rawCondition[0] == '.')
+        else if (rawCondition[0] == '.')
         {
             styleCondition.target = UssStyleTarget.Class;
             styleCondition.name = rawCondition.Substring(1);

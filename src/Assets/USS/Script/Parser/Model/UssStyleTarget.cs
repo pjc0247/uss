@@ -4,6 +4,10 @@ using UnityEngine;
 
 public enum UssStyleTarget
 {
+    /// <summary>
+    /// Asterisk(*)
+    /// </summary>
+    All,
     Component,
     Name,
     Class

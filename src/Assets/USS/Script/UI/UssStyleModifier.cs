@@ -190,7 +190,9 @@ public class UssStyleModifier : MonoBehaviour
     }
     private static bool CheckCondition(GameObject g, UssStyleCondition c)
     {
-        if (c.target == UssStyleTarget.Name)
+        if (c.target == UssStyleTarget.All)
+            return true;
+        else if (c.target == UssStyleTarget.Name)
         {
             if (g.name != c.name)
                 return false;
