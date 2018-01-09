@@ -75,7 +75,6 @@ public class UssParser
 
                 if (token.type == UssTokenType.ValueRef)
                 {
-                    Debug.Log(token.body);
                     state = ParsingState.Values;
                     valueState = ValueParsingState.Key;
                 }
@@ -160,7 +159,7 @@ public class UssParser
             if (token.type == UssTokenType.LeftBracket)
             {
                 state = ParsingState.Properties;
-                nodeType = CurrentNodeType.Style;
+                nodeType = CurrentNodeType.Bundle;
             }
             else if (token.type == UssTokenType.Colon) 
                 valueState = ValueParsingState.Value;
@@ -228,7 +227,7 @@ public class UssParser
         {
             if (token.type == UssTokenType.ValueRef)
             {
-                bundles.Add(token.body);
+                bundles.Add(token.body.Substring(1));
 
                 if (GetNextToken().type == UssTokenType.SemiColon)
                     WasteNextToken();
