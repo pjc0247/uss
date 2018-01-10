@@ -100,6 +100,7 @@ public class UssStyleModifier : MonoBehaviour
         if (styles == null)
             throw new InvalidOperationException(".ucss file not loaded yet.");
 
+        int appliedCount = 0;
         applyTime = DateTime.Now;
 
         foreach (var style in styles)
@@ -142,7 +143,12 @@ public class UssStyleModifier : MonoBehaviour
                     }
                 }
             }
+
+            appliedCount ++;
         }
+
+        if (appliedCount == 0)
+            DestroyImmediate(g.GetComponent<UssInspector>());
 
         for (int i = 0; i < g.transform.childCount; i++)
             Apply(g.transform.GetChild(i).gameObject);
