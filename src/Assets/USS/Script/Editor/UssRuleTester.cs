@@ -6,6 +6,7 @@ using UnityEditor;
 public class UssRuleTester : EditorWindow
 {
     private string query;
+    private int selections;
 
     [MenuItem("USS/SelectorTester")]
     public static void ShowRuleTester()
@@ -21,11 +22,17 @@ public class UssRuleTester : EditorWindow
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.Space();
 
+        EditorGUILayout.LabelField(selections + " object(s) found.");
+
         if (GUI.changed && string.IsNullOrEmpty(query) == false)
         {
             var conditions = UssParser.ParseConditions(query);
-            Debug.Log(conditions.Length);
+            if (conditions.Length == 0) return;
+
             Selection.objects = UssStyleModifier.FindObjects(UssRoot.FindRootInScene(), conditions);
+
+            selections = Selection.objects.Length;
         }
     }
 }
+ 
