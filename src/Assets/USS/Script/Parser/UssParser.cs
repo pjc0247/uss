@@ -52,6 +52,13 @@ public class UssParser
     {
         return new UssParser().ParseAll(UssLexer.Parse(src));
     }
+    public static UssStyleCondition[] ParseConditions(string src)
+    {
+        src += " "; // padding
+        var p = new UssParser();
+        p.ParseAll(UssLexer.Parse(src));
+        return p.conditions.ToArray();
+    }
 
     private UssParser()
     {

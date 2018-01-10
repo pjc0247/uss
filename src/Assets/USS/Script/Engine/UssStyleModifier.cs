@@ -177,6 +177,21 @@ public class UssStyleModifier : MonoBehaviour
             GetReferencesInternal(g.transform.GetChild(i).gameObject, styleRefs, result);
     }
 
+    public static GameObject[] FindObjects(GameObject g, UssStyleCondition[] conditions)
+    {
+        var result = new List<GameObject>();
+        FindObjectsInternal(g, conditions, result);
+        return result.ToArray();
+    }
+    private static void FindObjectsInternal(GameObject g, UssStyleCondition[] conditions, List<GameObject> result)
+    {
+        if (CheckConditions(g, conditions))
+            result.Add(g);
+
+        for (int i = 0; i < g.transform.childCount; i++)
+            FindObjectsInternal(g.transform.GetChild(i).gameObject, conditions, result);
+    }
+
     private static int CheckConditionsUpwards(GameObject g, UssStyleCondition[] conditions, int offset, bool mustMatch = false)
     {
         var target = conditions[conditions.Length - 1 - offset];
