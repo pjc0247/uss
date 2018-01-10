@@ -184,12 +184,8 @@ public class UssStyleModifier : MonoBehaviour
 
         offset += check ? 1 : 0;
 
-        //Debug.Log("MUST MATCH: " + mustMatch + " / " + target.name + " / " + offset);
         if (mustMatch && check == false)
-        {
-            Debug.Log("MustMatch Failed " + conditions.Length + " / " + offset);
             return offset;
-        }
 
         if (g.transform.parent == null) 
             return offset;
