@@ -95,8 +95,9 @@ public class UssLexer
         // HEX-COLOR
         if (str[0] == '#')
         {
-            if (UssValidator.IsValidHexColor(str) == false)
-                throw new UssInvalidTokenException(str);
+            // 용법이 확정되는 Parser레벨에서 검사
+            //if (UssValidator.IsValidId(str) == false)
+            //    throw new UssInvalidTokenException(str);
 
             return new UssToken()
             {
