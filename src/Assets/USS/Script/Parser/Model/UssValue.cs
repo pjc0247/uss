@@ -59,6 +59,18 @@ public static class UssValueExt
 
         if (v.GetType() == typeof(UssColorValue))
             return ((UssColorValue)v).value;
+        if (v.GetType() == typeof(UssStringValue))
+        {
+            var str = v.AsString();
+            if (str == "black")
+                return Color.black;
+            else if (str == "green")
+                return Color.green;
+            else if (str == "red")
+                return Color.red;
+            else if (str == "blue")
+                return Color.blue;
+        }
 
         throw new InvalidOperationException("Value cannot be color: " + v.GetType());
     }
