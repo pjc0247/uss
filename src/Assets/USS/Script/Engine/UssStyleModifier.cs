@@ -229,10 +229,14 @@ public class UssStyleModifier : MonoBehaviour
     }
     private static bool CheckConditions(GameObject g, UssStyleCondition[] conditions)
     {
+        var check = CheckCondition(g, conditions[conditions.Length - 1]);
+        if (check == false)
+            return false;
         if (conditions.Length == 1)
-            return CheckCondition(g, conditions[0]);
+            return check;
 
-        return CheckConditionsUpwards(g, conditions, 0) == conditions.Length; 
+        return CheckConditionsUpwards(g.transform.parent.gameObject, conditions, 1,
+            conditions[conditions.Length - 1].type == UssStyleConditionType.DirectDescendant) == conditions.Length; 
     }
 
     private static void AddInspectorItem(GameObject g, UssStyleDefinition style)
