@@ -33,6 +33,7 @@ public class UssLexer
         seperators["*"] = UssTokenType.Asterisk;
         seperators["//"] = UssTokenType.Comment;
         seperators["null"] = UssTokenType.Null;
+        seperators[">"] = UssTokenType.RightArrow;
     }
     public static UssToken[] Parse(string src)
     {

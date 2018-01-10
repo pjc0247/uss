@@ -13,6 +13,7 @@ public enum UssTokenType
     LeftBracket, RightBracket,
     Colon, SemiColon,
     Comma,
+    RightArrow,
 
     Asterisk,
 

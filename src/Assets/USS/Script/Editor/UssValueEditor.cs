@@ -20,6 +20,9 @@ public class UssValueEditor : EditorWindow
     public static void ShowValueEditor()
     {
         var window = new UssValueEditor();
+        window.titleContent = new GUIContent(
+            "InstantEditor",
+            AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/USS/Resources/penguin.png"));
         window.Show();
     }
 

@@ -46,6 +46,7 @@ public class UssParser
     private string propertyKey;
 
     private CurrentNodeType nodeType;
+    private UssStyleConditionType nextConditionType;
 
     public static UssParsingResult Parse(string src)
     {
@@ -195,6 +196,12 @@ public class UssParser
             return;
         }
 
+        if (token.type == UssTokenType.RightArrow)
+        {
+            nextConditionType = UssStyleConditionType.DirectDescendant;
+            return;
+        }
+
         // Every types of token can be accepted here
         // since name of the Unity's gameobject can contain almost characters.
         // (ex: Zu!ZU##!)
@@ -224,7 +231,9 @@ public class UssParser
             styleCondition.name = rawCondition;
         }
 
+        styleCondition.type = nextConditionType;
         conditions.Add(styleCondition);
+        nextConditionType = UssStyleConditionType.None;
     }
     private bool ParseProperties(UssToken token)
     {

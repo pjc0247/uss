@@ -177,16 +177,30 @@ public class UssStyleModifier : MonoBehaviour
             GetReferencesInternal(g.transform.GetChild(i).gameObject, styleRefs, result);
     }
 
-    private static int CheckConditionsUpwards(GameObject g, UssStyleCondition[] conditions, int offset)
+    private static int CheckConditionsUpwards(GameObject g, UssStyleCondition[] conditions, int offset, bool mustMatch = false)
     {
         var target = conditions[conditions.Length - 1 - offset];
+        var check = CheckCondition(g, target);
 
-        offset += CheckCondition(g, target) ? 1 : 0;
+        offset += check ? 1 : 0;
 
-        if (g.transform.parent == null)
+        //Debug.Log("MUST MATCH: " + mustMatch + " / " + target.name + " / " + offset);
+        if (mustMatch && check == false)
+        {
+            Debug.Log("MustMatch Failed " + conditions.Length + " / " + offset);
+            return offset;
+        }
+
+        if (g.transform.parent == null) 
+            return offset;
+        else if (offset == conditions.Length)
             return offset;
         else
-            return CheckConditionsUpwards(g.transform.parent.gameObject, conditions, offset);
+        {
+            return CheckConditionsUpwards(
+                g.transform.parent.gameObject, conditions, offset,
+                check ? target.type == UssStyleConditionType.DirectDescendant : false);
+        }
     }
     private static bool CheckCondition(GameObject g, UssStyleCondition c)
     {
@@ -217,8 +231,6 @@ public class UssStyleModifier : MonoBehaviour
     {
         if (conditions.Length == 1)
             return CheckCondition(g, conditions[0]);
-
-        var c = CheckConditionsUpwards(g, conditions, 1);
 
         return CheckConditionsUpwards(g, conditions, 0) == conditions.Length; 
     }
