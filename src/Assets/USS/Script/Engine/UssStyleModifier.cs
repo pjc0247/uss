@@ -94,6 +94,10 @@ public class UssStyleModifier : MonoBehaviour
 
     public static void Apply(GameObject g)
     {
+        Apply(g, styles.ToArray());
+    }
+    public static void Apply(GameObject g, UssStyleDefinition[] styles)
+    {
         if (g == null)
             Debug.LogWarning("Apply: gameObject is null");
         if (styles == null)
@@ -150,7 +154,7 @@ public class UssStyleModifier : MonoBehaviour
             DestroyImmediate(g.GetComponent<UssInspector>());
 
         for (int i = 0; i < g.transform.childCount; i++)
-            Apply(g.transform.GetChild(i).gameObject);
+            Apply(g.transform.GetChild(i).gameObject, styles);
     }
     public static UnityEngine.Object[] GetReferences(GameObject root, string key)
     {
@@ -185,7 +189,8 @@ public class UssStyleModifier : MonoBehaviour
     public static GameObject[] FindObjects(GameObject g, UssStyleCondition[] conditions)
     {
         var result = new List<GameObject>();
-        FindObjectsInternal(g, conditions, result);
+        if (conditions.Length > 0)
+            FindObjectsInternal(g, conditions, result);
         return result.ToArray();
     }
     private static void FindObjectsInternal(GameObject g, UssStyleCondition[] conditions, List<GameObject> result)
