@@ -205,6 +205,9 @@ public class UssParser
 
         if (token.type == UssTokenType.RightArrow)
         {
+            if (conditions.Count == 0)
+                throw new UssUnexpectedTokenException(token);
+
             nextConditionType = UssStyleConditionType.DirectDescendant;
             return;
         }

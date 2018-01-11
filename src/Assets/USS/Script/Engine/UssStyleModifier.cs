@@ -92,7 +92,6 @@ public class UssStyleModifier : MonoBehaviour
         }
     }
 
-
     public static void Apply(GameObject g)
     {
         if (g == null)
