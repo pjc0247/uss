@@ -5,6 +5,10 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class UssRoot : UssIndicator
 {
+    [HideInInspector]
+    public string ucssPath;
+    public Object ucss;
+
     public static GameObject  FindRootInScene()
     {
         Component root = FindObjectOfType<UssRoot>();
