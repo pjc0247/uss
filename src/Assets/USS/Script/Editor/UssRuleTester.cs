@@ -29,7 +29,8 @@ public class UssRuleTester : EditorWindow
             var conditions = UssParser.ParseConditions(query);
             if (conditions.Length == 0) return;
 
-            Selection.objects = UssStyleModifier.FindObjects(UssRoot.FindRootInScene(), conditions);
+            Selection.objects = UssStyleModifier.FindObjects(
+                UssRoot.FindRootInScene().gameObject, conditions);
 
             selections = Selection.objects.Length;
         }

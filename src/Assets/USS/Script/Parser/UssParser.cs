@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -143,10 +144,14 @@ public class UssParser
     {
         cur++;
     }
-    private UssToken GetNextToken()
+    private UssToken GetNextToken(bool shouldBeNotNull)
     {
         if (cur + 1 == tokens.Count)
+        {
+            if (shouldBeNotNull)
+                throw new UssParsingException("Unexpected end");
             return null;
+        }
         return tokens[cur + 1];
     }
 
@@ -209,6 +214,17 @@ public class UssParser
                 throw new UssUnexpectedTokenException(token);
 
             nextConditionType = UssStyleConditionType.DirectDescendant;
+            return;
+        }
+        if (token.type == UssTokenType.Colon)
+        {
+            if (conditions.Count == 0)
+                throw new UssUnexpectedTokenException(token);
+            if (GetNextToken(true).type != UssTokenType.Id)
+                throw new UssUnexpectedTokenException(GetNextToken(), UssTokenType.Id);
+
+            conditions.Last().targetState = GetNextToken().body;
+            WasteNextToken();
             return;
         }
 

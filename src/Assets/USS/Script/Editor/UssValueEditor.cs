@@ -59,8 +59,8 @@ public class UssValueEditor : EditorWindow
         if (GUI.changed)
         {
             var root = UssRoot.FindRootInScene();
-            UssStyleModifier.Apply(root);
-            EditorUtility.SetDirty(root);
+            UssStyleModifier.Apply(root.gameObject);
+            EditorUtility.SetDirty(root.gameObject);
         }
     }
 

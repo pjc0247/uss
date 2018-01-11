@@ -9,8 +9,7 @@ public class UssAutoRefresh : AssetPostprocessor
 {
     public static string currentUcss
     {
-        get { return EditorPrefs.GetString("_ucss_current_ucss", ""); }
-        set { EditorPrefs.SetString("_ucss_current_ucss", value); }
+        get { return UssRoot.FindRootInScene().ucssPath; }
     }
 
     public static void EnsureLastUcssLoaded()
@@ -29,10 +28,7 @@ public class UssAutoRefresh : AssetPostprocessor
                 continue;
 
             if (asset == currentUcss)
-            {
                 UssStyleModifier.LoadUss(File.ReadAllText(asset));
-                
-            }
         }
     }
 }

@@ -9,7 +9,7 @@ public class UssRoot : UssIndicator
     public string ucssPath;
     public Object ucss;
 
-    public static GameObject  FindRootInScene()
+    public static UssRoot FindRootInScene()
     {
         Component root = FindObjectOfType<UssRoot>();
 
@@ -25,6 +25,6 @@ public class UssRoot : UssIndicator
             }
         }
 
-        return root.gameObject;
+        return root.GetComponent<UssRoot>();
     }
 }
