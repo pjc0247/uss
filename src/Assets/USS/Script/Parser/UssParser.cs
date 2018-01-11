@@ -144,7 +144,7 @@ public class UssParser
     {
         cur++;
     }
-    private UssToken GetNextToken(bool shouldBeNotNull)
+    private UssToken GetNextToken(bool shouldBeNotNull = false)
     {
         if (cur + 1 == tokens.Count)
         {
