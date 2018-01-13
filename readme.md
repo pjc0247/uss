@@ -2,7 +2,7 @@
   <img src="uss.png" width="260px" />
 </p>
 <p align="center">
-__Unity Style Shit__
+<b>Unity Style Shit</b>
 </p>
 <br>
 
