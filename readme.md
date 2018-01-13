@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="uss.png" width="200px" />
+  <img src="uss.png" width="260px" />
 </p>
 <p align="center">
-Unity Style Shit
+__Unity Style Shit__
 </p>
 <br>
 
