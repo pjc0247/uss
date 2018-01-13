@@ -3,7 +3,7 @@
 </p>
 <p align="center">
 __Unity Style Shit__<br>
-[![Documentation Status](https://readthedocs.org/projects/uss/badge/?version=latest)](http://uss.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/uss/badge/?version=latest)](http://uss.readthedocs.io/en/latest/?badge=latest)]
 </p>
 <br>
 
