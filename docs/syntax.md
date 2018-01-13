@@ -1,7 +1,7 @@
 Syntax
 ====
 
-`.ucss` syntax is oriented from __css__.<br>
+`.ucss`'s syntax is oriented from __css__.<br>
 If you can write css code already, you may skip beginning of this section.
 
 Basic Structure
@@ -17,7 +17,7 @@ sel1 #sel2 .sel3 {
     color: black;
 }
 ```
-`.ucss` is consist of __VALUEs__ and __STYLEs__.<br>
+`.ucss` file is consist of __VALUEs__ and __STYLEs__.<br>
 <br>
 You must append semicolon(`;`) every end of syntax.
 
@@ -73,12 +73,15 @@ __Bundle__ is kind of value which is set of __properties__.<br>
 }
 ```
 The example below shows how to import bundle to style.
+
 ```css
 .title {
     @h1;
 }
 ```
+
 You can also import bundle to bundle:
+
 ```css
 @foo {
     font-size: 40;

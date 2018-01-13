@@ -9,4 +9,5 @@ Contents:
    installation
    syntax
    property
+   create_property
 
