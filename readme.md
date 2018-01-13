@@ -1,8 +1,10 @@
 <p align="center">
   <img src="uss.png" />
 </p>
-
-Unity Style Shit<br>
+<p align="center">
+Unity Style Shit
+</p>
+<br>
 
 Concept
 ----
