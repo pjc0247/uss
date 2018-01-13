@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="uss.png" />
+  <img src="uss.png" width="200px" />
 </p>
 <p align="center">
 Unity Style Shit
