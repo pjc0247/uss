@@ -23,7 +23,3 @@ Features
 * Zero overhead (editor-time execution)
 * Auto refreshing
 * Instant editor
-
-Instant Editor
-----
-![a](img/instant_editor.png)
