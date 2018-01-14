@@ -2,7 +2,8 @@
   <img src="uss.png" width="260px" />
 </p>
 <p align="center">
-<b>Unity Style Shit</b>
+<b>Unity Style Shit</b><br>
+  <a href="http://uss.readthedocs.io/en/latest/index.html">documentation</a>
 </p>
 <br>
 
