@@ -86,7 +86,7 @@ __Class selector__
 
 ```css
 .bold {
-    
+
 }
 ```
 
@@ -117,6 +117,7 @@ Button:hover {
 Bundle
 ----
 __Bundle__ is kind of value which is set of __properties__.<br>
+With this syntax, you can simplify the code with many duplicates.
 
 ```css
 @h1 {
@@ -129,6 +130,11 @@ The example below shows how to import bundle to style.
 ```css
 .title {
     @h1;
+}
+// above code is exactly same with below.
+.title {
+    font-size: 40;
+    font-style: bold;
 }
 ```
 
