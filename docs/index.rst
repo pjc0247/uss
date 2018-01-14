@@ -1,4 +1,4 @@
-Welcome to USS's documentation.
+USS - Unity Style Sheet
 ----
 
 Contents:
