@@ -3,7 +3,8 @@
 </p>
 <p align="center">
 <b>Unity Style Shit</b><br>
-  <a href="http://uss.readthedocs.io/en/latest/index.html">documentation</a>
+  <a href="http://uss.readthedocs.io/en/latest/index.html">documentation</a><br>
+  <a href="https://github.com/pjc0247/uss/releases">download</a>
 </p>
 <br>
 
