@@ -61,6 +61,58 @@ SELECTOR1 SELECTOR2 {
     PROPERTY-KEY: PROPERTY-VALUE;
 }
 ```
+__STYLE__ is a set of properties which describes specified object styles.<br>
+<br>
+First, you need to specify the object to which you want to apply the style. You can select single or multiple objects with __SELECTOR__.
+__SELECTORs__ in __uss__ is very simillar to __css__'s. Here's some rules how to specify objects in __uss__.<br>
+
+__Component selector__
+
+```css
+Image {
+
+}
+```
+
+__Name selector__
+
+```css
+#DateOfMonth {
+
+}
+```
+
+__Class selector__
+
+```css
+.bold {
+    
+}
+```
+
+__Special selectors__
+
+```css
+* { 
+}
+```
+
+__Descendant__
+
+```css
+Button > Text {
+
+}
+```
+
+__State specifier__
+
+```css
+Button:hover {
+
+}
+```
+
 
 Bundle
 ----
