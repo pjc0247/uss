@@ -13,4 +13,17 @@ Next, create a `ucss` file to somewhere proper place. (ex: `Assets/Resources/def
 
 ![ucss_slot](imgs/ucss_slot.png)<br>
 There's a __Ucss__ slot in `UssRoot`.<br>
-Drag the `.ucss` file you just created to the __Ucss__.
+Drag the `.ucss` file you just created to the __Ucss__.<br>
+<br>
+You can specify different files for each scene.
+
+
+Load ucss with code
+----
+You can also load __ucss__ in with code. 
+```csharp
+var ucss = System.IO.File.ReadAllText("PATH_TO_LOAD");
+
+UssStyleModifier.LoadUss(ucss);
+```
+`LoadUss` can be executed in runtime. But this can hang your application in few moments.
