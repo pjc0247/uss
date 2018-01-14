@@ -19,6 +19,10 @@ __padding-bottom__
 ```css
 padding-bottom: 0;
 ```
+__rotation__
+```css
+rotation: 0;
+```
 
 UI Style
 ----
