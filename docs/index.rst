@@ -10,4 +10,4 @@ Contents:
    syntax
    property
    create_property
-
+   tool

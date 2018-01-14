@@ -22,9 +22,19 @@ Just use `AsInt()`, this already contains type-checking logic.
 UssValue
 ----
 ```csharp
+UssValue v;
+
+string s = v.AsString();
+int i = v.AsInt();
+float f = v.AsFloat();
+Color c = v.AsColor(); 
+```
+```csharp
+if (v.IsNone())
+    ; // none
 ```
 
-Register your property
+Register
 ----
 ```csharp
 UssStyleModifier.LoadModifier<UssTextModifier>();
