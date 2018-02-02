@@ -236,24 +236,24 @@ public class UssParser
 
         if (rawCondition[0] == '*')
         {
-            styleCondition.target = UssStyleTarget.All;
+            styleCondition.target = UssSelectorType.All;
             styleCondition.name = "*";
         }
         // CLASS
         else if (rawCondition[0] == '.')
         {
-            styleCondition.target = UssStyleTarget.Class;
+            styleCondition.target = UssSelectorType.Class;
             styleCondition.name = rawCondition.Substring(1);
         }
         // NAME
         else if (rawCondition[0] == '#')
         {
-            styleCondition.target = UssStyleTarget.Name;
+            styleCondition.target = UssSelectorType.Name;
             styleCondition.name = rawCondition.Substring(1);
         }
         else
         {
-            styleCondition.target = UssStyleTarget.Component;
+            styleCondition.target = UssSelectorType.Component;
             styleCondition.name = rawCondition;
         }
 

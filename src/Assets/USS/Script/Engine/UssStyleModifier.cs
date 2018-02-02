@@ -225,19 +225,19 @@ public class UssStyleModifier : MonoBehaviour
     }
     private static bool CheckCondition(GameObject g, UssStyleCondition c)
     {
-        if (c.target == UssStyleTarget.All)
+        if (c.target == UssSelectorType.All)
             return true;
-        else if (c.target == UssStyleTarget.Name)
+        else if (c.target == UssSelectorType.Name)
         {
             if (g.name != c.name)
                 return false;
         }
-        else if (c.target == UssStyleTarget.Component)
+        else if (c.target == UssSelectorType.Component)
         {
             if (g.GetComponent(c.name) == null)
                 return false;
         }
-        else if (c.target == UssStyleTarget.Class)
+        else if (c.target == UssSelectorType.Class)
         {
             var klass = g.GetComponent<UssClass>();
             if (klass == null)

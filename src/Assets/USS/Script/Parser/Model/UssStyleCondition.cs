@@ -9,7 +9,7 @@ public enum UssStyleConditionType
 }
 public class UssStyleCondition
 {
-    public UssStyleTarget target;
+    public UssSelectorType target;
     public UssStyleConditionType type;
     public string name;
 

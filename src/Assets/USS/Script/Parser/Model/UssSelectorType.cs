@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum UssStyleTarget
+public enum UssSelectorType
 {
     /// <summary>
     /// Asterisk(*)
