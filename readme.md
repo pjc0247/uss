@@ -5,7 +5,7 @@
 <b>Unity Style Sheet</b><br>
   <a href="http://uss.readthedocs.io/en/latest/index.html">documentation</a><br>
   <a href="https://github.com/pjc0247/uss/releases">download</a><br>
-  <a href="https://www.youtube.com/watch?v=D4oIQ_3KjwA">youtube sample</a>
+  <a href="https://www.youtube.com/watch?v=D4oIQ_3KjwA">youtube showcase</a>
 </p>
 <br>
 
